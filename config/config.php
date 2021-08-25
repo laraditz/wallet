@@ -11,5 +11,5 @@ return [
         'slug' => env('WALLET_TYPE_DEFAULT_NAME', 'default'),
         'description' => env('WALLET_TYPE_DEFAULT_DESCRIPTION', 'The default wallet'),
         'currency_code' => env('WALLET_TYPE_DEFAULT_CURRENCY', 'MYR'),
-    ]
+    ],
 ];

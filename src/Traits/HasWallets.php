@@ -2,11 +2,11 @@
 
 namespace Laraditz\Wallet\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Laraditz\Wallet\Models\Transaction;
 use Laraditz\Wallet\Models\Wallet;
 use Laraditz\Wallet\Models\WalletType;
-use Laraditz\Wallet\Models\Transaction;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Builder;
 
 trait HasWallets
 {
@@ -50,7 +50,6 @@ trait HasWallets
         try {
             return $this->getWalletOrFail($slug);
         } catch (ModelNotFoundException $modelNotFoundException) {
-
             $this->_wallets[$slug] = $this->createWallet($slug);
 
             return $this->_wallets[$slug];
