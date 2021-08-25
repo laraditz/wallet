@@ -1,4 +1,9 @@
 preset: laravel
 
 disabled:
-  - single_class_element_per_statement
+  - not_operator_with_successor_space
+  - concat_without_spaces
+
+finder:
+  exclude:    
+    - "vendor"
