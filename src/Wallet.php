@@ -20,7 +20,7 @@ class Wallet
     private $immediate = false;
 
     private $default_types = [
-        'deposit', 'withdraw', 'transfer'
+        'deposit', 'withdraw', 'transfer',
     ];
 
     public function getTypes()
@@ -120,15 +120,13 @@ class Wallet
     private function addTxs(TransactionBatch $tx)
     {
         foreach ($this->txs as $item) {
-
-            throw_if(bccomp(data_get($item, 'amount'), "0") === 0 || bccomp(data_get($item, 'amount'), "0") === -1, LogicException::class, __('Amount must be larger than 0.'));
-
+            throw_if(bccomp(data_get($item, 'amount'), '0') === 0 || bccomp(data_get($item, 'amount'), '0') === -1, LogicException::class, __('Amount must be larger than 0.'));
 
             if (data_get($item, 'direction') === 'Out') {
                 $balance_after = bcsub($item['modelWallet']->available_amount, data_get($item, 'amount'));
 
-                throw_if(bccomp($item['modelWallet']->available_amount, "0") === 0 || bccomp($item['modelWallet']->available_amount, "0") === -1, LogicException::class, __('Not enough balance.'));
-                throw_if(bccomp($balance_after, "0") === -1, LogicException::class, __('Not enough balance.'));
+                throw_if(bccomp($item['modelWallet']->available_amount, '0') === 0 || bccomp($item['modelWallet']->available_amount, '0') === -1, LogicException::class, __('Not enough balance.'));
+                throw_if(bccomp($balance_after, '0') === -1, LogicException::class, __('Not enough balance.'));
             }
 
             $lock_key = 'lock.wallet.' . data_get($item, 'modelWallet.id');
@@ -171,7 +169,6 @@ class Wallet
             ->in($toWallet, $amount)
             ->makeTransaction();
     }
-
 
     public function generateRefNo(int $length = 16): string
     {

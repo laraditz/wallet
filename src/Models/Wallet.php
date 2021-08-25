@@ -2,12 +2,12 @@
 
 namespace Laraditz\Wallet\Models;
 
-use Laraditz\Wallet\Enums\TxStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laraditz\Wallet\Traits\Transactable;
 use Laraditz\Wallet\Enums\Direction;
+use Laraditz\Wallet\Enums\TxStatus;
+use Laraditz\Wallet\Traits\Transactable;
 
 class Wallet extends Model
 {
@@ -63,7 +63,6 @@ class Wallet extends Model
             }
         } elseif ($transaction->direction === Direction::Out) {
             if ($field === 'available_amount') {
-
                 if ($transaction->status === TxStatus::Processing) {
                     $new_balance = bcsub($this->$field, $transaction->amount);
                 } elseif ($transaction->status === TxStatus::Failed) {

@@ -15,7 +15,7 @@ class Transaction extends Model
     protected $fillable = [
         'batch_id', 'ref_no', 'wallet_id', 'wallet_type_id', 'type',
         'model_type', 'model_id', 'direction', 'currency_code', 'amount',
-        'amount_before', 'amount_after', 'description', 'status', 'data'
+        'amount_before', 'amount_after', 'description', 'status', 'data',
     ];
 
     /**
