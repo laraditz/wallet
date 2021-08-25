@@ -65,7 +65,6 @@ class TransactionBatch extends Model
                 $model->getOriginal('status') == TxStatus::Processing &&
                 $model->status === TxStatus::Completed
             ) {
-
                 if ($model->transactions) {
                     foreach ($model->transactions as $transaction) {
                         DB::transaction(function () use ($transaction) {
