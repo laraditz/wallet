@@ -37,11 +37,6 @@ class Wallet extends Model
         return $this->belongsTo(WalletType::class);
     }
 
-    public function scopeOwner($query)
-    {
-        return $query->whereUserId(auth()->id());
-    }
-
     public function scopeBySlug($query, $slug)
     {
         return $query->whereHas('walletType', function (Builder $query) use ($slug) {

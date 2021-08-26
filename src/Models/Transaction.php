@@ -69,11 +69,6 @@ class Transaction extends Model
         return $this->belongsTo(TransactionBatch::class, 'batch_id');
     }
 
-    public function scopeOwner($query)
-    {
-        return $query->whereUserId(auth()->id());
-    }
-
     public function scopeIn($query)
     {
         return $query->where('direction', Direction::In);
