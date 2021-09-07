@@ -14,12 +14,12 @@ trait Transactable
         return app('wallet')->type($type)->immediate(true)->deposit($this, $amount);
     }
 
-    public function withdraw($amount, $type = 'deposit')
+    public function withdraw($amount, $type = 'withdraw')
     {
-        return app('wallet')->type($type, $type = 'deposit')->withdraw($this, $amount);
+        return app('wallet')->type($type)->withdraw($this, $amount);
     }
 
-    public function withdrawNow($amount, $type = 'deposit')
+    public function withdrawNow($amount, $type = 'withdraw')
     {
         return app('wallet')->type($type)->immediate(true)->withdraw($this, $amount);
     }
