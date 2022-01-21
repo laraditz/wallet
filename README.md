@@ -64,7 +64,15 @@ app('wallet')->createWalletType([
 
 // to use the new wallet
 $userThree = User::find(3);
-$walletThree = $userThree->getWallet('new-wallet); // use the wallet slug
+$walletThree = $userThree->getWallet('new-wallet'); // use the wallet slug
+
+// to update description or/and metadata to the wallet
+$walletThree->update([
+    'description' => 'This is my crypto wallet', 
+    'metadata' => [
+        'address' => '0xf6A32f757196ac753A354F145F408bF88BEacf77'
+    ]
+]);
 
 ```
 
