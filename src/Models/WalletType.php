@@ -33,4 +33,9 @@ class WalletType extends Model
             $model->slug = Str::of($model->name)->slug('-');
         });
     }
+
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class);
+    }
 }

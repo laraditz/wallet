@@ -22,6 +22,17 @@ class Wallet extends Model
         'wallet_type_id',
         'model_type',
         'model_id',
+        'description',
+        'metadata',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'metadata' => 'json',
     ];
 
     /**
@@ -35,11 +46,6 @@ class Wallet extends Model
     public function walletType()
     {
         return $this->belongsTo(WalletType::class);
-    }
-
-    public function scopeOwner($query)
-    {
-        return $query->whereUserId(auth()->id());
     }
 
     public function scopeBySlug($query, $slug)

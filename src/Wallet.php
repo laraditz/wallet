@@ -94,6 +94,9 @@ class Wallet
             $tx->markAsCompleted();
         }
 
+        // reset
+        $this->txs = [];
+
         return $tx;
     }
 
