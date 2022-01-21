@@ -2,6 +2,11 @@
 
 All notable changes to `Laravel Wallet` will be documented in this file
 
+## 0.0.1 - 2022-01-21
+
+### Added
+- Add description and metadata field to wallet.
+
 ## 0.0.0 - 2021-08-25
 
 - initial release
