@@ -2,7 +2,6 @@
 
 namespace Laraditz\Wallet\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -11,8 +10,6 @@ use Laraditz\Wallet\Enums\TxStatus;
 
 class TransactionBatch extends Model
 {
-    use HasFactory;
-
     protected $fillable = ['id', 'type', 'amounts', 'status', 'status_description', 'remark', 'data'];
 
     /**

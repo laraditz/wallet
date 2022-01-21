@@ -2,7 +2,6 @@
 
 namespace Laraditz\Wallet\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Laraditz\Wallet\Enums\Direction;
@@ -10,8 +9,6 @@ use Laraditz\Wallet\Enums\TxStatus;
 
 class Transaction extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'batch_id', 'ref_no', 'wallet_id', 'wallet_type_id', 'type',
         'model_type', 'model_id', 'direction', 'currency_code', 'amount',

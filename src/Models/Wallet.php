@@ -3,7 +3,6 @@
 namespace Laraditz\Wallet\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laraditz\Wallet\Enums\Direction;
 use Laraditz\Wallet\Enums\TxStatus;
@@ -11,7 +10,7 @@ use Laraditz\Wallet\Traits\Transactable;
 
 class Wallet extends Model
 {
-    use HasFactory, Transactable;
+    use Transactable;
 
     /**
      * The attributes that are mass assignable.
