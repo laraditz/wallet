@@ -34,10 +34,10 @@ class Money implements CastsAttributes
     public function set(Model $model, string $key, mixed $value, array $attributes): int
     {
         if ($value instanceof MoneyDTO) {
-            return $value->value;
+            return $value->getMinorAmount();
         }
 
-        return $value;
+        return (int) $value;
     }
 
     private function getWalletType(mixed $model)
