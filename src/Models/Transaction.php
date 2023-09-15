@@ -2,8 +2,12 @@
 
 namespace Laraditz\Wallet\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
+use Laraditz\Wallet\Casts\Money;
 use Laraditz\Wallet\Enums\Direction;
 use Laraditz\Wallet\Enums\TxStatus;
 
@@ -12,7 +16,7 @@ class Transaction extends Model
     protected $fillable = [
         'batch_id', 'ref_no', 'wallet_id', 'wallet_type_id', 'type',
         'model_type', 'model_id', 'direction', 'currency_code', 'amount',
-        'amount_before', 'amount_after', 'description', 'status', 'data',
+        'amount_before', 'amount_after', 'description', 'status', 'metadata',
     ];
 
     /**
@@ -21,24 +25,34 @@ class Transaction extends Model
      * @var array
      */
     protected $casts = [
-        'data' => 'json',
+        'direction' => Direction::class,
+        'status' => TxStatus::class,
+        'metadata' => 'json',
+        'amount' => Money::class,
+        'amount_before' => Money::class,
+        'amount_after' => Money::class,
     ];
+
+    public function getTable()
+    {
+        return config('wallet.table_names.transactions', parent::getTable());
+    }
 
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->batch_id = $model->batch_id ?? (string) Str::orderedUuid();
+            $model->batch_id = $model->batch_id ?? (string) Str::ulid();
             $model->ref_no = $model->ref_no ?? app('wallet')->generateRefNo();
         });
 
         static::created(function ($model) {
             if (
-                object_get($model, 'batch.status') === TxStatus::Processing
+                data_get($model, 'batch.status') === TxStatus::Processing
                 && $model->direction === Direction::Out
             ) {
-                $model->wallet->updateBalance($model, 'available_amount');
+                $model->wallet?->updateBalance($model, 'available_amount');
             }
         });
     }
@@ -46,42 +60,42 @@ class Transaction extends Model
     /**
      * Get the parent model.
      */
-    public function model()
+    public function model(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function walletType()
+    public function walletType(): BelongsTo
     {
         return $this->belongsTo(WalletType::class);
     }
 
-    public function wallet()
+    public function wallet(): BelongsTo
     {
         return $this->belongsTo(Wallet::class);
     }
 
-    public function batch()
+    public function batch(): BelongsTo
     {
         return $this->belongsTo(TransactionBatch::class, 'batch_id');
     }
 
-    public function scopeIn($query)
+    public function scopeIn($query): Builder
     {
         return $query->where('direction', Direction::In);
     }
 
-    public function scopeOut($query)
+    public function scopeOut($query): Builder
     {
         return $query->where('direction', Direction::Out);
     }
 
-    public function scopeByType($query, $type)
+    public function scopeByType($query, $type): Builder
     {
         return $query->where('type', $type);
     }
 
-    public function scopeByTypes($query, array $types)
+    public function scopeByTypes($query, array $types): Builder
     {
         return $query->whereIn('type', $types);
     }
@@ -91,13 +105,13 @@ class Transaction extends Model
         if ($this->wallet) {
             if ($this->direction === Direction::In) {
                 $amounts = [
-                    'amount_before' => $this->wallet->balance_amount,
-                    'amount_after' => bcadd($this->wallet->balance_amount, $this->amount),
+                    'amount_before' => $this->wallet->balance_amount?->value,
+                    'amount_after' => bcadd($this->wallet->balance_amount?->value, $this->amount?->value),
                 ];
             } elseif ($this->direction === Direction::Out) {
                 $amounts = [
-                    'amount_before' => $this->wallet->balance_amount,
-                    'amount_after' => bcsub($this->wallet->balance_amount, $this->amount),
+                    'amount_before' => $this->wallet->balance_amount?->value,
+                    'amount_after' => bcsub($this->wallet->balance_amount?->value, $this->amount?->value),
                 ];
             }
 

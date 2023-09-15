@@ -4,6 +4,11 @@ namespace Laraditz\Wallet\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Str;
+use Laraditz\Wallet\Casts\Money;
+use Laraditz\Wallet\Enums\ActiveStatus;
 use Laraditz\Wallet\Enums\Direction;
 use Laraditz\Wallet\Enums\TxStatus;
 use Laraditz\Wallet\Traits\Transactable;
@@ -18,9 +23,11 @@ class Wallet extends Model
      * @var array
      */
     protected $fillable = [
+        'address',
         'wallet_type_id',
         'model_type',
         'model_id',
+        'status',
         'description',
         'metadata',
     ];
@@ -32,50 +39,75 @@ class Wallet extends Model
      */
     protected $casts = [
         'metadata' => 'json',
+        'status' => ActiveStatus::class,
+        'available_amount' => Money::class,
+        'balance_amount' => Money::class,
+        'accumulated_amount' => Money::class,
+        'used_amount' => Money::class,
     ];
+
+    public function getTable()
+    {
+        return config('wallet.table_names.wallets', parent::getTable());
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->address ??= (string) Str::ulid();
+            $model->status ??= ActiveStatus::Active;
+        });
+    }
 
     /**
      * Get the parent owner.
      */
-    public function model()
+    public function model(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function walletType()
+    public function walletType(): BelongsTo
     {
         return $this->belongsTo(WalletType::class);
     }
 
-    public function scopeBySlug($query, $slug)
+    public function scopeBySlug($query, $slug): void
     {
-        return $query->whereHas('walletType', function (Builder $query) use ($slug) {
+        $query->whereHas('walletType', function (Builder $query) use ($slug) {
             $query->where('slug', 'like', $slug);
         });
+    }
+
+    public function scopeActive($query): void
+    {
+        $query->where('status', ActiveStatus::Active);
     }
 
     public function updateBalance($transaction, $field = 'balance_amount')
     {
         $new_balance = 0;
-        $accumulated_amount = $this->accumulated_amount;
-        $used_amount = $this->used_amount;
+        $accumulated_amount = $this->accumulated_amount?->value;
+        $used_amount = $this->used_amount?->value;
 
         if ($transaction->direction === Direction::In) {
-            $new_balance = bcadd($this->$field, $transaction->amount);
+            $new_balance = bcadd($this->$field?->value, $transaction->amount?->value);
             if ($field === 'balance_amount') {
-                $this->available_amount = bcadd($this->available_amount, $transaction->amount);
-                $this->accumulated_amount = bcadd($accumulated_amount, $transaction->amount);
+                $this->available_amount = bcadd($this->available_amount?->value, $transaction->amount?->value);
+                $this->accumulated_amount = bcadd($accumulated_amount, $transaction->amount?->value);
             }
         } elseif ($transaction->direction === Direction::Out) {
             if ($field === 'available_amount') {
                 if ($transaction->status === TxStatus::Processing) {
-                    $new_balance = bcsub($this->$field, $transaction->amount);
+                    $new_balance = bcsub($this->$field?->value, $transaction->amount?->value);
                 } elseif ($transaction->status === TxStatus::Failed) {
-                    $new_balance = bcadd($this->$field, $transaction->amount);
+                    $new_balance = bcadd($this->$field?->value, $transaction->amount?->value);
                 }
             } else {
-                $new_balance = bcsub($this->$field, $transaction->amount);
-                $this->used_amount = bcadd($used_amount, $transaction->amount);
+                $new_balance = bcsub($this->$field?->value, $transaction->amount?->value);
+                $this->used_amount = bcadd($used_amount, $transaction->amount?->value);
             }
         }
 
