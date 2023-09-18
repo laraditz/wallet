@@ -5,6 +5,7 @@ namespace Laraditz\Wallet\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Laraditz\Wallet\Enums\ActiveStatus;
+use Laraditz\Wallet\Enums\Placement;
 
 class WalletType extends Model
 {
@@ -19,14 +20,19 @@ class WalletType extends Model
         'description',
         'currency_code',
         'currency_symbol',
+        'code_placement',
+        'symbol_placement',
         'default_scale',
-        'placement',
+        'decimal_separator',
+        'thousand_separator',
         'status',
         'start_at',
         'end_at',
     ];
 
     protected $casts = [
+        'code_placement' => Placement::class,
+        'symbol_placement' => Placement::class,
         'status' => ActiveStatus::class,
         'start_at' => 'datetime',
         'end_at' => 'datetime',
@@ -46,6 +52,10 @@ class WalletType extends Model
     {
         static::creating(function (self $model) {
             $model->slug = Str::of($model->name)->slug('-');
+            $model->code_placement ??= Placement::Left;
+            $model->symbol_placement ??= Placement::Left;
+            $model->decimal_separator ??= config('wallet.decimal_separator');
+            $model->thousand_separator ??= config('wallet.thousand_separator');
             $model->status ??= ActiveStatus::Active;
         });
     }

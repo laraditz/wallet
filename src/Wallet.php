@@ -4,6 +4,7 @@ namespace Laraditz\Wallet;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Laraditz\Wallet\Enums\ActiveStatus;
 use Laraditz\Wallet\Enums\Direction;
 use Laraditz\Wallet\Enums\TxStatus;
 use Laraditz\Wallet\Models\TransactionBatch;
@@ -21,6 +22,11 @@ class Wallet
 
     private array $defaultTypes = [
         'deposit', 'withdraw', 'transfer',
+    ];
+
+    protected $casts = [
+        'status' => ActiveStatus::class,
+        'metadata' => 'json',
     ];
 
     public function getTypes(): array

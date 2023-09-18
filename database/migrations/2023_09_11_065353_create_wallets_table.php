@@ -21,7 +21,7 @@ return new class extends Migration
             $table->bigInteger('accumulated_amount')->default(0);
             $table->bigInteger('used_amount')->default(0);
             $table->smallInteger('status')->nullable();
-            $table->bigInteger('description')->nullable();
+            $table->string('description')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
         });

@@ -5,13 +5,9 @@
  */
 return [
     'tx_types' => env('WALLET_TX_TYPES'),
-    'wallet_type' => [
-        'name' => env('WALLET_TYPE_DEFAULT_NAME', 'Default'),
-        'slug' => env('WALLET_TYPE_DEFAULT_SLUG', 'default'),
-        'description' => env('WALLET_TYPE_DEFAULT_DESCRIPTION', 'The default wallet'),
-        'currency_code' => env('WALLET_TYPE_DEFAULT_CURRENCY', 'PTS'),
-        'currency_symbol' => env('WALLET_TYPE_DEFAULT_CURRENCY_SYMBOL', 'Pts'),
-    ],
+    'decimal_separator' => env('WALLET_DECIMAL_SEPARATOR', '.'),
+    'thousand_separator' => env('WALLET_THOUSAND_SEPARATOR', ','),
+    'default_wallet' => env('WALLET_DEFAULT', 'default'),
     'table_names' => [
         'wallet_types' => env('WALLET_TABLE_NAMES_WALLET_TYPES', 'wallet_types'),
         'wallets' => env('WALLET_TABLE_NAMES_WALLET', 'wallets'),

@@ -46,7 +46,7 @@ trait HasWallets
 
     public function getWallet(?string $slug = null): ?Wallet
     {
-        $slug ??= config('wallet.wallet_type.slug');
+        $slug ??= config('wallet.default_wallet');
 
         try {
             return $this->getWalletOrFail($slug);
@@ -78,14 +78,14 @@ trait HasWallets
         return $this->_wallets[$slug];
     }
 
-    public function createWallet(?string $slug = null)
+    public function createWallet(?string $slug = null, ?array $values = [])
     {
-        $slug ??= config('wallet.wallet_type.slug');
+        $slug ??= config('wallet.default_wallet');
 
         $walletType = WalletType::where('slug', $slug)->firstOrFail();
 
         return $this->wallets()->updateOrCreate([
             'wallet_type_id' => $walletType->id,
-        ], []);
+        ], $values);
     }
 }

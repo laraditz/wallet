@@ -25,7 +25,7 @@ class Money
 
     public function formattedAmount(): string
     {
-        return (string) number_format($this->getAmount(), $this->getDefaultFractionDigits());
+        return (string) number_format($this->getAmount(), $this->getDefaultFractionDigits(), $this->getDecimalSeparator(), $this->getThousandSeparator());
     }
 
     public function getAmount()
@@ -41,6 +41,16 @@ class Money
     public function getDefaultFractionDigits(): int
     {
         return $this->walletType->default_scale;
+    }
+
+    public function getDecimalSeparator(): string
+    {
+        return $this->walletType->decimal_separator;
+    }
+
+    public function getThousandSeparator(): string
+    {
+        return $this->walletType->thousand_separator;
     }
 
     private function setCode(string $code): void

@@ -20,20 +20,16 @@ return new class extends Migration
             $table->string('description', 100)->nullable();
             $table->string('currency_code', 10)->nullable();
             $table->string('currency_symbol', 10)->nullable();
+            $table->smallInteger('code_placement')->nullable();
+            $table->smallInteger('symbol_placement')->nullable();
             $table->smallInteger('default_scale')->default(0);
+            $table->string('decimal_separator', 5)->nullable();
+            $table->string('thousand_separator', 5)->nullable();
             $table->smallInteger('status')->nullable();
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();
             $table->timestamps();
         });
-
-        // Create default wallet
-        app('wallet')->createWalletType([
-            'name' => config('wallet.wallet_type.name'),
-            'currency_code' => config('wallet.wallet_type.currency_code'),
-            'currency_symbol' => config('wallet.wallet_type.currency_symbol'),
-            'description' => config('wallet.wallet_type.description'),
-        ]);
     }
 
     /**
