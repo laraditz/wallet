@@ -2,6 +2,11 @@
 
 All notable changes to `Laravel Wallet` will be documented in this file
 
+## 1.0.1 - 2023-09-19
+
+### Fixed
+- Declaration of Money cast not compatible
+
 ## 1.0.0 - 2023-09-19
 
 Rework and introduce new features.
