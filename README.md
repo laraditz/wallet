@@ -98,7 +98,6 @@ $walletOne->transferNow($walletTwo, "100"); // Use transferNow() so that the tra
 
 // get user transactions
 $allTransactions = $userOne->transactions;
-
 ```
 
 By default when you call `getWallet`, it will create the user wallet if it's not already been created. You wallet will be assigned a random unique wallet address value. But it is also possible for you to create the wallet with your own address value.
@@ -123,7 +122,6 @@ $walletThree->update([
         'user' => 'Farhan'
     ]
 ]);
-
 ```
 
 ### Testing
