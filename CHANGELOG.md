@@ -2,6 +2,11 @@
 
 All notable changes to `Laravel Wallet` will be documented in this file
 
+## 1.0.3 - 2023-09-20
+
+### Fixed
+- Fix placement return type on Money DTO.
+
 ## 1.0.2 - 2023-09-20
 
 ### Changed
