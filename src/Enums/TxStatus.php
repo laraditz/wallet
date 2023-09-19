@@ -2,9 +2,9 @@
 
 namespace Laraditz\Wallet\Enums;
 
-class TxStatus extends Enums
+enum TxStatus: int
 {
-    const Failed = 0;
-    const Completed = 1;
-    const Processing = 2;
+    case Failed = 0;
+    case Completed = 1;
+    case Processing = 2;
 }

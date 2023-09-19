@@ -4,6 +4,7 @@ namespace Laraditz\Wallet\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Laraditz\Wallet\Models\Transaction;
 use Laraditz\Wallet\Models\Wallet;
 use Laraditz\Wallet\Models\WalletType;
@@ -28,7 +29,7 @@ trait HasWallets
      *
      * @return MorphMany
      */
-    public function wallets()
+    public function wallets(): MorphMany
     {
         return $this->morphMany(Wallet::class, 'model');
     }
@@ -38,14 +39,14 @@ trait HasWallets
      *
      * @return MorphMany
      */
-    public function transactions()
+    public function transactions(): MorphMany
     {
         return $this->morphMany(Transaction::class, 'model');
     }
 
-    public function getWallet(string $slug = null): ?Wallet
+    public function getWallet(?string $slug = null): ?Wallet
     {
-        $slug = $slug ?? config('wallet.wallet_type.slug');
+        $slug ??= config('wallet.default_wallet');
 
         try {
             return $this->getWalletOrFail($slug);
@@ -59,6 +60,7 @@ trait HasWallets
     public function getWalletOrFail(string $slug): Wallet
     {
         if (!$this->_loadedWallets && $this->relationLoaded('wallets')) {
+
             $this->_loadedWallets = true;
             $wallets = $this->getRelation('wallets');
             foreach ($wallets as $wallet) {
@@ -76,12 +78,14 @@ trait HasWallets
         return $this->_wallets[$slug];
     }
 
-    public function createWallet($slug = 'default')
+    public function createWallet(?string $slug = null, ?array $values = [])
     {
+        $slug ??= config('wallet.default_wallet');
+
         $walletType = WalletType::where('slug', $slug)->firstOrFail();
 
         return $this->wallets()->updateOrCreate([
             'wallet_type_id' => $walletType->id,
-        ], []);
+        ], $values);
     }
 }

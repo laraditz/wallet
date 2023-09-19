@@ -4,12 +4,14 @@
  * You can place your custom package configuration in here.
  */
 return [
-    'decimal' => env('WALLET_DECIMAL', 2),
-    'tx_types' => env('WALLET_TX_TYPES', null),
-    'wallet_type' => [
-        'name' => env('WALLET_TYPE_DEFAULT_NAME', 'Default'),
-        'slug' => env('WALLET_TYPE_DEFAULT_SLUG', 'default'),
-        'description' => env('WALLET_TYPE_DEFAULT_DESCRIPTION', 'The default wallet'),
-        'currency_code' => env('WALLET_TYPE_DEFAULT_CURRENCY', 'MYR'),
-    ],
+    'tx_types' => env('WALLET_TX_TYPES'),
+    'decimal_separator' => env('WALLET_DECIMAL_SEPARATOR', '.'),
+    'thousand_separator' => env('WALLET_THOUSAND_SEPARATOR', ','),
+    'default_wallet' => env('WALLET_DEFAULT', 'default'),
+    'table_names' => [
+        'wallet_types' => env('WALLET_TABLE_NAMES_WALLET_TYPES', 'wallet_types'),
+        'wallets' => env('WALLET_TABLE_NAMES_WALLET', 'wallets'),
+        'transaction_batches' => env('WALLET_TABLE_NAMES_TRANSACTION_BATCHES', 'transaction_batches'),
+        'transactions' => env('WALLET_TABLE_NAMES_TRANSACTIONS', 'transactions'),
+    ]
 ];

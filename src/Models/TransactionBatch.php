@@ -2,18 +2,18 @@
 
 namespace Laraditz\Wallet\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Laraditz\Wallet\Enums\Direction;
 use Laraditz\Wallet\Enums\TxStatus;
 
 class TransactionBatch extends Model
 {
-    use HasFactory;
+    use HasUlids;
 
-    protected $fillable = ['id', 'type', 'amounts', 'status', 'status_description', 'remark', 'data'];
+    protected $fillable = ['id', 'type', 'amounts', 'status', 'status_description', 'remark', 'metadata'];
 
     /**
      * The attributes that should be cast.
@@ -21,21 +21,17 @@ class TransactionBatch extends Model
      * @var array
      */
     protected $casts = [
+        'status' => TxStatus::class,
         'amounts' => 'json',
-        'data' => 'json',
+        'metadata' => 'json',
     ];
 
-    public function getIncrementing()
+    public function getTable()
     {
-        return false;
+        return config('wallet.table_names.transaction_batches', parent::getTable());
     }
 
-    public function getKeyType()
-    {
-        return 'string';
-    }
-
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'batch_id');
     }
@@ -43,10 +39,6 @@ class TransactionBatch extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::creating(function ($model) {
-            $model->{$model->getKeyName()} = $model->id ?? (string) Str::orderedUuid();
-        });
 
         static::updated(function ($model) {
             // update transactions status

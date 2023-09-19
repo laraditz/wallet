@@ -2,8 +2,8 @@
 
 namespace Laraditz\Wallet\Enums;
 
-class Direction extends Enums
+enum Direction: int
 {
-    const In = 1;
-    const Out = 2;
+    case In = 1;
+    case Out = 2;
 }

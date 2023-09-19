@@ -24,7 +24,7 @@ class WalletServiceProvider extends ServiceProvider
             if (function_exists('config_path')) {
                 $this->publishes([
                     __DIR__ . '/../config/config.php' => config_path('wallet.php'),
-                ], 'laraditz-wallet-config');
+                ], 'config');
             }
 
             // Publishing the views.
