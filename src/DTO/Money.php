@@ -2,6 +2,7 @@
 
 namespace Laraditz\Wallet\DTO;
 
+use Laraditz\Wallet\Enums\Placement;
 use Laraditz\Wallet\Models\WalletType;
 
 class Money
@@ -18,9 +19,19 @@ class Money
         $this->setSymbol($this->walletType->currency_symbol);
     }
 
-    public function display(): string
+    public function display(bool $useSymbol = false): string
     {
-        return $this->getCode() . ' ' . $this->formattedAmount();
+        $code = $this->getCode();
+
+        if ($useSymbol === true) {
+            $code = $this->getSymbol();
+        }
+
+        if ($this->getSymbolPlacement() === Placement::Left) {
+            return $code . ' ' . $this->formattedAmount();
+        }
+
+        return $this->formattedAmount() . ' ' . $code;
     }
 
     public function formattedAmount(): string
@@ -51,6 +62,16 @@ class Money
     public function getThousandSeparator(): string
     {
         return $this->walletType->thousand_separator;
+    }
+
+    public function getCodePlacement(): string
+    {
+        return $this->walletType->code_placement;
+    }
+
+    public function getSymbolPlacement(): string
+    {
+        return $this->walletType->symbol_placement;
     }
 
     private function setCode(string $code): void
