@@ -64,12 +64,12 @@ class Money
         return $this->walletType->thousand_separator;
     }
 
-    public function getCodePlacement(): string
+    public function getCodePlacement(): Placement
     {
         return $this->walletType->code_placement;
     }
 
-    public function getSymbolPlacement(): string
+    public function getSymbolPlacement(): Placement
     {
         return $this->walletType->symbol_placement;
     }
