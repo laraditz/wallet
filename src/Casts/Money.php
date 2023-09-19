@@ -17,7 +17,7 @@ class Money implements CastsAttributes
      *
      * @param  array<string, mixed>  $attributes
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): MoneyDTO
+    public function get($model, string $key, $value, array $attributes): MoneyDTO
     {
         return new MoneyDTO(
             $value,
@@ -31,7 +31,7 @@ class Money implements CastsAttributes
      * @param  array<string, mixed>  $attributes
      * @return array<string, string>
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes): int
+    public function set($model, string $key, $value, array $attributes): int
     {
         if ($value instanceof MoneyDTO) {
             return $value->getMinorAmount();
