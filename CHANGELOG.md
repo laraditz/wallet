@@ -2,6 +2,24 @@
 
 All notable changes to `Laravel Wallet` will be documented in this file
 
+## 1.0.0 - 2023-09-19
+
+Rework and introduce new features.
+
+### Added
+- Add support for Laravel 9, 10 and remove support for previous versions.
+- Add more setting for wallet types.
+- Add type-safety.
+- Add Money casting.
+- Add Money DTO.
+
+### Changed
+- Update to use PHP enum.
+- Change migration to use anonymous class.
+- Remove default wallet.
+- Update readme.
+
+
 ## 0.0.2 - 2022-01-22
 
 ### Added
