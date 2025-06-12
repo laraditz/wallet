@@ -2,6 +2,12 @@
 
 All notable changes to `Laravel Wallet` will be documented in this file
 
+## 1.1.3 - 2025-06-12
+
+### Changed
+
+- Update composer.json.
+
 ## 1.1.2 - 2025-06-12
 
 ### Changed
